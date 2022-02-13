@@ -1,6 +1,7 @@
 import { readdirSync } from "fs";
 const express = require("express");
 const mongoose = require("mongoose");
+const helmet = require("helmet");
 const morgan = require("morgan");
 const cors = require("cors");
 require("dotenv").config();
@@ -10,6 +11,20 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(helmet.hidePoweredBy());
+app.use(helmet.ieNoOpen());
+app.use(
+  helmet({
+    frameguard: {
+      action: "deny",
+    },
+  })
+);
+app.use(helmet.noSniff());
+app.use(helmet.xssFilter({}));
+
+var ninetyDaysInSeconds = 90 * 24 * 60 * 60;
+app.use(helmet.hsts({ maxAge: ninetyDaysInSeconds, force: true }));
 
 mongoose
   .connect(`${process.env.DATABASE}`, {
