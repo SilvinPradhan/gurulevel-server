@@ -2,14 +2,19 @@ import { readdirSync } from "fs";
 const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
+const csrf = require("csurf");
+const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 require("dotenv").config();
+
+const csrfProtection = csrf({ cookie: true });
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(helmet.hidePoweredBy());
 app.use(helmet.ieNoOpen());
@@ -37,6 +42,11 @@ mongoose.connection.on("error", (err) => {
 });
 
 readdirSync("./routes").map((r) => app.use("/api", require(`./routes/${r}`)));
+app.use(csrfProtection);
+
+app.get("/api/csrf-token", (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
 
 const port = process.env.PORT || 8000;
 
