@@ -2,6 +2,7 @@ import User from "../models/user";
 import { hashPassword, comparePassword } from "../utils/auth";
 import jwt from "jsonwebtoken";
 import AWS from "aws-sdk";
+import { nanoid } from "nanoid";
 
 // AWS Configuration
 const awsConfig = {
@@ -130,6 +131,53 @@ export const testAWSEmail = async (req, res) => {
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
+    const shortCode = nanoid(6).toUpperCase();
+    const user = await User.findOneAndUpdate(
+      { email },
+      { passwordResetCode: shortCode }
+    );
+    if (!user) {
+      return res.status(400).send("Human with this email not found.");
+    }
+    const params = {
+      Source: process.env.EMAIL_FROM,
+      Destination: {
+        ToAddresses: [email],
+      },
+      Message: {
+        Body: {
+          Html: {
+            Charset: "UTF-8",
+            Data: `
+              <html>
+                <h2>Reset Password Link</h2>
+                <p>Use this code to reset your password.</p>
+                <h4 style="color:red;">${shortCode}</h4>
+                <i>gurulevel.com</i>
+                <br />
+                <span>
+                  Please ignore this email if you did not requested to change
+                  your password
+                </span>
+              </html>
+            `,
+          },
+        },
+        Subject: {
+          Charset: "UTF-8",
+          Data: "Reset Password",
+        },
+      },
+    };
+    const emailSent = awsSES.sendEmail(params).promise();
+    emailSent
+      .then((data) => {
+        console.log(data);
+        res.json({ ok: true });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   } catch (err) {
     console.log(err);
   }
