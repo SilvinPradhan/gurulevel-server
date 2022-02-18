@@ -34,6 +34,7 @@ const userSchema = new Schema(
     stripeSession: {},
     passwordResetCode: {
       data: String,
+      createdAt: { type: Date, expires: "2m", default: Date.now },
       default: "",
     },
   },

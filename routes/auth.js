@@ -10,6 +10,7 @@ const {
   currentUser,
   testAWSEmail,
   forgotPassword,
+  resetPassword,
 } = require("../controllers/auth");
 
 router.post("/register", register);
@@ -18,6 +19,7 @@ router.get("/logout", logout);
 router.get("/current-user", requireSignin, currentUser);
 
 router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
 
 router.get("/send-email", testAWSEmail);
 
