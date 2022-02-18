@@ -126,3 +126,11 @@ export const testAWSEmail = async (req, res) => {
       console.log(err);
     });
 };
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+  } catch (err) {
+    console.log(err);
+  }
+};

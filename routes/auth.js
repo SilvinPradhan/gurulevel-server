@@ -9,12 +9,15 @@ const {
   logout,
   currentUser,
   testAWSEmail,
+  forgotPassword,
 } = require("../controllers/auth");
 
 router.post("/register", register);
 router.post("/login", login);
 router.get("/logout", logout);
 router.get("/current-user", requireSignin, currentUser);
+
+router.post("/forgot-password", forgotPassword);
 
 router.get("/send-email", testAWSEmail);
 
