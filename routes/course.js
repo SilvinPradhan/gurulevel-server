@@ -11,6 +11,7 @@ import {
   addLesson,
   update,
   removeLesson,
+  updateLesson,
 } from "../controllers/course";
 import { isInstructor, requireSignin } from "../middlewares";
 const router = express.Router();
@@ -28,6 +29,8 @@ router.post(
 );
 router.post("/course/video-remove/:instructorId", requireSignin, removeVideo);
 router.post("/course/lesson/:slug/:instructorId", requireSignin, addLesson);
+router.put("/course/lesson/:slug/:lessonId", requireSignin, updateLesson);
+
 //update course
 router.put("/course/:slug", requireSignin, update);
 // delete lesson
