@@ -12,9 +12,14 @@ import {
   update,
   removeLesson,
   updateLesson,
+  publishCourse,
+  unpublishCourse,
+  courses,
 } from "../controllers/course";
 import { isInstructor, requireSignin } from "../middlewares";
+
 const router = express.Router();
+router.get("/courses", courses);
 
 router.post("/course/upload-image", uploadImage);
 router.post("/course/remove-image", removeImage);
@@ -28,14 +33,18 @@ router.post(
   uploadVideo
 );
 router.post("/course/video-remove/:instructorId", requireSignin, removeVideo);
+
+// publish and unpublish API
+router.put("/course/publish/:courseId", requireSignin, publishCourse);
+router.put("/course/unpublish/:courseId", requireSignin, unpublishCourse);
+
+// add and update lesson API
 router.post("/course/lesson/:slug/:instructorId", requireSignin, addLesson);
 router.put("/course/lesson/:slug/:lessonId", requireSignin, updateLesson);
 
-//update course
+//update course API
 router.put("/course/:slug", requireSignin, update);
-// delete lesson
+// delete lesson API
 router.put("/course/:slug/:lessonId", requireSignin, removeLesson);
-
-router;
 
 module.exports = router;
