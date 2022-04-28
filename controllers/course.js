@@ -1,6 +1,7 @@
 import AWS from "aws-sdk";
 import { nanoid } from "nanoid";
 import Course from "../models/course";
+import User from "../models/user";
 import slugify from "slugify";
 import { readFileSync } from "fs";
 
@@ -297,5 +298,30 @@ export const courses = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(400).send("Could not get the courses.");
+  }
+};
+
+export const checkEnrollment = async (req, res) => {
+  const { courseId } = req.params;
+  // fidn courses of the currently logged in user.
+  const user = await User.findById(req.user._id).exec();
+  // check if course id is found in user courses array
+  let ids = [];
+  let length = user.courses && user.courses.length;
+  for (let i = 0; i < length; i++) {
+    ids.push(user.courses[i].toString());
+  }
+  res.json({
+    status: ids.includes(courseId),
+    course: await Course.findById(courseId).exec(),
+  });
+};
+
+export const freeEnrollment = async (req, res) => {
+  try {
+    console.log("Enrolled for free");
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send("Could not get enrolled for Free.");
   }
 };

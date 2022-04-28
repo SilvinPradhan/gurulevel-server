@@ -15,6 +15,8 @@ import {
   publishCourse,
   unpublishCourse,
   courses,
+  checkEnrollment,
+  freeEnrollment,
 } from "../controllers/course";
 import { isInstructor, requireSignin } from "../middlewares";
 
@@ -46,5 +48,14 @@ router.put("/course/lesson/:slug/:lessonId", requireSignin, updateLesson);
 router.put("/course/:slug", requireSignin, update);
 // delete lesson API
 router.put("/course/:slug/:lessonId", requireSignin, removeLesson);
+
+// check if the user is enrolled
+router.get("/check-enrollment/:courseId", requireSignin, checkEnrollment);
+
+{
+  /** Enrollment */
+}
+// Free
+router.post("/free-enrollment/:courseId", requireSignin, freeEnrollment);
 
 module.exports = router;
