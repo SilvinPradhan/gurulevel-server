@@ -26,8 +26,14 @@
     "morgan": "^1.10.0",
     "nanoid": "^3.3.1",
     "nodemon": "^2.0.15",
+    "pm2": "^5.2.0",
     "query-string": "^7.1.1",
     "slugify": "^1.6.5",
     "stripe": "^8.203.0"
+  },
+  "devDependencies": {
+    "mocha": "^10.0.0",
+    "should": "^13.2.3",
+    "supertest": "^6.2.3"
   }
 }
